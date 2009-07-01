@@ -186,7 +186,7 @@ class UNL_DWT
      * 
      * @return   none
      */
-    function debug($message, $logtype = 0, $level = 1)
+    static function debug($message, $logtype = 0, $level = 1)
     {
         if (empty(self::$options['debug'])  || 
             (is_numeric(self::$options['debug']) &&  self::$options['debug'] < $level)) {

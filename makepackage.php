@@ -15,7 +15,7 @@ $pfm = PEAR_PackageFileManager2::importOptions('package.xml', array(
 //$pfm = new PEAR_PackageFileManager2();
 //$pfm->setOptions(array(
 	'packagedirectory' => dirname(__FILE__),
-	'baseinstalldir' => 'UNL',
+	'baseinstalldir' => '/',
 	'filelistgenerator' => 'file',
 	'ignore' => array(	'package.xml',
 						'package2.xml',
@@ -37,12 +37,10 @@ $pfm->setDescription('This package generates php class files (objects) from Drea
 $pfm->setChannel('pear.unl.edu');
 $pfm->setAPIStability('beta');
 $pfm->setReleaseStability('beta');
-$pfm->setAPIVersion('0.7.0');
-$pfm->setReleaseVersion('0.7.0');
+$pfm->setAPIVersion('0.7.1');
+$pfm->setReleaseVersion('0.7.1');
 $pfm->setNotes('
-Move region class into separate file.
-Add scanner for simply scanning a dwt for regions, this does not replace the
-generator, but supplements it.
+Declare debug method correctly as static.
 ');
 
 //$pfm->addMaintainer('lead','saltybeagle','Brett Bieber','brett.bieber@gmail.com');
