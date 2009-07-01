@@ -50,7 +50,7 @@ $pfm->clearDeps();
 $pfm->addConflictingPackageDepWithChannel('UNL_Templates', 'pear.unl.edu', false, false, '0.5.2');
 $pfm->setPhpDep('5.0.0');
 $pfm->setPearinstallerDep('1.4.3');
-foreach (array('DWT.php','docs/examples/example.ini','docs/examples/example_style1.php') as $file) {
+foreach (array('UNL/DWT.php','docs/examples/example.ini','docs/examples/example_style1.php') as $file) {
 	$pfm->addReplacement($file, 'pear-config', '@PHP_BIN@', 'php_bin');
 	$pfm->addReplacement($file, 'pear-config', '@PHP_DIR@', 'php_dir');
 	$pfm->addReplacement($file, 'pear-config', '@DATA_DIR@', 'data_dir');

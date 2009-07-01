@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.7.3" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.8.0alpha1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
  <name>UNL_DWT</name>
  <channel>pear.unl.edu</channel>
  <summary>This package generates php class files (objects) from Dreamweaver template files.</summary>
@@ -10,11 +10,11 @@
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2008-06-30</date>
- <time>09:49:38</time>
+ <date>2009-07-01</date>
+ <time>11:47:05</time>
  <version>
-  <release>0.7.0</release>
-  <api>0.7.0</api>
+  <release>0.7.1</release>
+  <api>0.7.1</api>
  </version>
  <stability>
   <release>beta</release>
@@ -22,12 +22,10 @@
  </stability>
  <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
  <notes>
-Move region class into separate file.
-Add scanner for simply scanning a dwt for regions, this does not replace the
-generator, but supplements it.
+Declare debug method correctly as static.
  </notes>
  <contents>
-  <dir baseinstalldir="UNL" name="/">
+  <dir baseinstalldir="/" name="/">
    <dir name="docs">
     <dir name="examples">
      <file name="example.ini" role="doc">
@@ -48,18 +46,20 @@ generator, but supplements it.
      <file name="Template_style1.tpl" role="doc" />
     </dir> <!-- /docs/examples -->
    </dir> <!-- /docs -->
-   <dir name="DWT">
-    <file name="createTemplates.php" role="php" />
-    <file name="Generator.php" role="php" />
-    <file name="Region.php" role="php" />
-    <file name="Scanner.php" role="php" />
-   </dir> <!-- /DWT -->
-   <file name="DWT.php" role="php">
-    <tasks:replace from="@PHP_BIN@" to="php_bin" type="pear-config" />
-    <tasks:replace from="@PHP_DIR@" to="php_dir" type="pear-config" />
-    <tasks:replace from="@DATA_DIR@" to="data_dir" type="pear-config" />
-    <tasks:replace from="@DOC_DIR@" to="doc_dir" type="pear-config" />
-   </file>
+   <dir name="UNL">
+    <dir name="DWT">
+     <file name="createTemplates.php" role="php" />
+     <file name="Generator.php" role="php" />
+     <file name="Region.php" role="php" />
+     <file name="Scanner.php" role="php" />
+    </dir> <!-- /UNL/DWT -->
+    <file name="DWT.php" role="php">
+     <tasks:replace from="@PHP_BIN@" to="php_bin" type="pear-config" />
+     <tasks:replace from="@PHP_DIR@" to="php_dir" type="pear-config" />
+     <tasks:replace from="@DATA_DIR@" to="data_dir" type="pear-config" />
+     <tasks:replace from="@DOC_DIR@" to="doc_dir" type="pear-config" />
+    </file>
+   </dir> <!-- /UNL -->
   </dir> <!-- / -->
  </contents>
  <dependencies>
@@ -91,7 +91,9 @@ generator, but supplements it.
    </stability>
    <date>2006-01-26</date>
    <license>PHP License</license>
-   <notes>First release, only basic functionality.</notes>
+   <notes>
+First release, only basic functionality.
+   </notes>
   </release>
   <release>
    <version>
@@ -104,9 +106,11 @@ generator, but supplements it.
    </stability>
    <date>2006-02-06</date>
    <license>PHP License</license>
-   <notes>Added generator options generator_include/eclude_regex and extends and extends_location.
+   <notes>
+Added generator options generator_include/eclude_regex and extends and extends_location.
 Create dwt_location and tpl_location if it does not exist yet.
-Remove editable region tags for locked regions.</notes>
+Remove editable region tags for locked regions.
+   </notes>
   </release>
   <release>
    <version>
@@ -119,10 +123,12 @@ Remove editable region tags for locked regions.</notes>
    </stability>
    <date>2006-02-24</date>
    <license>PHP License</license>
-   <notes>* Added missing setOption function. Initially only debug option is available.
+   <notes>
+* Added missing setOption function. Initially only debug option is available.
 * Renamed internally used function between to UNL_DWT_between
 * created externally callable replaceRegions function.
-* debug function for outputting messages levels 0-5.</notes>
+* debug function for outputting messages levels 0-5.
+   </notes>
   </release>
   <release>
    <version>
@@ -135,8 +141,10 @@ Remove editable region tags for locked regions.</notes>
    </stability>
    <date>2006-08-15</date>
    <license uri="http://www.php.net/license">PHP License</license>
-   <notes>* Fix Bug #16: Locked regions aren&apos;t detected correctly.
-				 * Fix Bug #1: Include path modified incorrectly.</notes>
+   <notes>
+* Fix Bug #16: Locked regions aren&apos;t detected correctly.
+				 * Fix Bug #1: Include path modified incorrectly.
+   </notes>
   </release>
   <release>
    <version>
@@ -149,7 +157,9 @@ Remove editable region tags for locked regions.</notes>
    </stability>
    <date>2008-02-07</date>
    <license uri="http://www.php.net/license">PHP License</license>
-   <notes>* Switch to using static properties, PHP 5, add docheader.</notes>
+   <notes>
+* Switch to using static properties, PHP 5, add docheader.
+   </notes>
   </release>
   <release>
    <version>
@@ -162,11 +172,13 @@ Remove editable region tags for locked regions.</notes>
    </stability>
    <date>2008-03-26</date>
    <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
-   <notes>Move code around. DWT.php is now in UNL/DWT.php instead of UNL/DWT/DWT.php = not compatible with old versions of UNL_Templates!
+   <notes>
+Move code around. DWT.php is now in UNL/DWT.php instead of UNL/DWT/DWT.php = not compatible with old versions of UNL_Templates!
 * Switch to using static properties
 * Upgrade a lot of code to PHP 5
 * Add phpdoc headers and coding standards fixes
-* Switch to BSD license.</notes>
+* Switch to BSD license.
+   </notes>
   </release>
   <release>
    <version>
@@ -179,7 +191,9 @@ Remove editable region tags for locked regions.</notes>
    </stability>
    <date>2008-04-08</date>
    <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
-   <notes>Change is_a() to instanceof to fix warning.</notes>
+   <notes>
+Change is_a() to instanceof to fix warning.
+   </notes>
   </release>
   <release>
    <version>
@@ -196,6 +210,21 @@ Remove editable region tags for locked regions.</notes>
 Move region class into separate file.
 Add scanner for simply scanning a dwt for regions, this does not replace the
 generator, but supplements it.
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.7.1</release>
+    <api>0.7.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2009-07-01</date>
+   <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
+   <notes>
+Declare debug method correctly as static.
    </notes>
   </release>
  </changelog>
