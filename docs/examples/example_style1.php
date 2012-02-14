@@ -6,6 +6,8 @@
 ini_set('display_errors',true);
 error_reporting(E_ALL|E_STRICT);
 
+set_include_path(dirname(__DIR__).'/../src');
+
 require_once 'UNL/DWT.php';
 if ('@DATA_DIR@' == '@'.'DATA_DIR@') {
     $configfile = 'example.test.ini';
