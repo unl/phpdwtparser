@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.8.0alpha1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
+<package version="2.1" xmlns="http://pear.php.net/dtd/package-2.1" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.1     http://pear.php.net/dtd/package-2.1.xsd">
  <name>UNL_DWT</name>
  <channel>pear.unl.edu</channel>
- <summary>This package generates php class files (objects) from Dreamweaver template files.</summary>
- <description>This package generates php class files (objects) from Dreamweaver template files.</description>
+ <summary>This package generates php class files (objects) from Dreamweaver template files.
+</summary>
+ <description>
+This package generates php class files (objects) from Dreamweaver template files.
+</description>
  <lead>
   <name>Brett Bieber</name>
   <user>saltybeagle</user>
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2009-07-01</date>
- <time>11:47:05</time>
+ <date>2012-02-14</date>
+ <time>16:39:59</time>
  <version>
-  <release>0.7.1</release>
+  <release>0.7.2</release>
   <api>0.7.1</api>
  </version>
  <stability>
@@ -21,46 +24,32 @@
   <api>beta</api>
  </stability>
  <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
- <notes>
-Declare debug method correctly as static.
- </notes>
+ <notes>Scanner fix - do not replace newlines with spaces in scanned content</notes>
  <contents>
-  <dir baseinstalldir="/" name="/">
-   <dir name="docs">
+  <dir name="/">
+   <dir name="docs" baseinstalldir="/">
     <dir name="examples">
-     <file name="example.ini" role="doc">
-      <tasks:replace from="@PHP_BIN@" to="php_bin" type="pear-config" />
-      <tasks:replace from="@PHP_DIR@" to="php_dir" type="pear-config" />
-      <tasks:replace from="@DATA_DIR@" to="data_dir" type="pear-config" />
-      <tasks:replace from="@DOC_DIR@" to="doc_dir" type="pear-config" />
-     </file>
-     <file name="example_style1.php" role="doc">
-      <tasks:replace from="@PHP_BIN@" to="php_bin" type="pear-config" />
-      <tasks:replace from="@PHP_DIR@" to="php_dir" type="pear-config" />
-      <tasks:replace from="@DATA_DIR@" to="data_dir" type="pear-config" />
-      <tasks:replace from="@DOC_DIR@" to="doc_dir" type="pear-config" />
-     </file>
-     <file name="scanner_example.php" role="doc" />
-     <file name="template_style1.dwt" role="doc" />
-     <file name="Template_style1.php" role="doc" />
-     <file name="Template_style1.tpl" role="doc" />
-    </dir> <!-- /docs/examples -->
-   </dir> <!-- /docs -->
-   <dir name="UNL">
-    <dir name="DWT">
-     <file name="createTemplates.php" role="php" />
-     <file name="Generator.php" role="php" />
-     <file name="Region.php" role="php" />
-     <file name="Scanner.php" role="php" />
-    </dir> <!-- /UNL/DWT -->
-    <file name="DWT.php" role="php">
-     <tasks:replace from="@PHP_BIN@" to="php_bin" type="pear-config" />
-     <tasks:replace from="@PHP_DIR@" to="php_dir" type="pear-config" />
-     <tasks:replace from="@DATA_DIR@" to="data_dir" type="pear-config" />
-     <tasks:replace from="@DOC_DIR@" to="doc_dir" type="pear-config" />
-    </file>
-   </dir> <!-- /UNL -->
-  </dir> <!-- / -->
+     <file role="doc" name="example.ini"/>
+     <file role="doc" name="example.test.ini"/>
+     <file role="doc" name="example_style1.php"/>
+     <file role="doc" name="scanner_example.php"/>
+     <file role="doc" name="template_style1.dwt"/>
+     <file role="doc" name="Template_style1.php"/>
+     <file role="doc" name="Template_style1.tpl"/>
+    </dir>
+   </dir>
+   <dir name="src" baseinstalldir="/">
+    <dir name="UNL">
+     <dir name="DWT">
+      <file role="php" name="createTemplates.php"/>
+      <file role="php" name="Generator.php"/>
+      <file role="php" name="Region.php"/>
+      <file role="php" name="Scanner.php"/>
+     </dir>
+     <file role="php" name="DWT.php"/>
+    </dir>
+   </dir>
+  </dir>
  </contents>
  <dependencies>
   <required>
@@ -74,11 +63,11 @@ Declare debug method correctly as static.
     <name>UNL_Templates</name>
     <channel>pear.unl.edu</channel>
     <max>0.5.2</max>
-    <conflicts />
+    <conflicts/>
    </package>
   </required>
  </dependencies>
- <phprelease />
+ <phprelease/>
  <changelog>
   <release>
    <version>
@@ -142,7 +131,7 @@ Remove editable region tags for locked regions.
    <date>2006-08-15</date>
    <license uri="http://www.php.net/license">PHP License</license>
    <notes>
-* Fix Bug #16: Locked regions aren&apos;t detected correctly.
+* Fix Bug #16: Locked regions aren't detected correctly.
 				 * Fix Bug #1: Include path modified incorrectly.
    </notes>
   </release>
