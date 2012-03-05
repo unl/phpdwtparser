@@ -90,7 +90,7 @@ class UNL_DWT_Generator extends UNL_DWT
             include_once 'System.php';
             System::mkdir(array('-p', UNL_DWT::$options['dwt_location']));
         }
-        if (!file_exists($options['tpl_location'])) {
+        if (!file_exists(UNL_DWT::$options['tpl_location'])) {
             include_once 'System.php';
             System::mkdir(array('-p', UNL_DWT::$options['tpl_location']));
         }
