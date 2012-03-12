@@ -13,8 +13,8 @@ This package generates php class files (objects) from Dreamweaver template files
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2012-02-14</date>
- <time>16:39:59</time>
+ <date>2012-03-12</date>
+ <time>15:51:05</time>
  <version>
   <release>0.7.2</release>
   <api>0.7.1</api>
@@ -57,7 +57,7 @@ This package generates php class files (objects) from Dreamweaver template files
     <min>5.0.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.3</min>
+    <min>2.0.0a1</min>
    </pearinstaller>
    <package>
     <name>UNL_Templates</name>
