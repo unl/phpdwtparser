@@ -78,7 +78,7 @@ class UNL_DWT
             return '';
         }
 
-        return file_get_contents($options['tpl_location'].$this->__template);
+        return file_get_contents(self::$options['tpl_location'].$this->__template);
     }
 
     /**
@@ -188,7 +188,6 @@ class UNL_DWT
 
         return $p;
     }
-
 
     /**
      * Create a new UNL_DWT object for the specified layout type

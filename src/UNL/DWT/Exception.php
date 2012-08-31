@@ -1,6 +1,6 @@
 <?php
 /**
- * exception used by the UNL_DWT class
+ * Exception used by the UNL_DWT class.
  *
  * @category  Templates
  * @package   UNL_DWT

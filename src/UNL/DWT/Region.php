@@ -1,7 +1,7 @@
 <?php
 /**
  * Object representing a Dreamweaver template region
- * 
+ *
  * @category  Templates
  * @package   UNL_DWT
  * @author    Brett Bieber <brett.bieber@gmail.com>
@@ -19,4 +19,3 @@ class UNL_DWT_Region
     var $flags;
     var $value;
 }
-?>
