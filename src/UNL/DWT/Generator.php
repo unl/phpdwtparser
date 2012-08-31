@@ -15,6 +15,7 @@
  */
 
 require_once 'UNL/DWT.php';
+require_once 'UNL/DWT/Exception.php';
 require_once 'UNL/DWT/Region.php';
 
 /**
