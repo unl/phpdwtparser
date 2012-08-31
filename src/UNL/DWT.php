@@ -189,7 +189,6 @@ class UNL_DWT
         return $p;
     }
 
-
     /**
      * Create a new UNL_DWT object for the specified layout type
      *

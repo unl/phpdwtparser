@@ -10,5 +10,3 @@ $scanned = new UNL_DWT_Scanner($file);
 
 echo $scanned->leftnav;
 echo $scanned->content;
-
-?>

@@ -455,7 +455,6 @@ class UNL_DWT_Generator extends UNL_DWT
      */
     function _generateSetters($input)
     {
-
         $setters = '';
 
         // only generate if option is set to true
@@ -498,5 +497,4 @@ class UNL_DWT_Generator extends UNL_DWT
 
         return $setters;
     }
-
 }
