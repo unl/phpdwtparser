@@ -15,6 +15,7 @@
  */
 
 require_once 'UNL/DWT.php';
+require_once 'UNL/DWT/Exception.php';
 require_once 'UNL/DWT/Region.php';
 
 /**
@@ -454,7 +455,6 @@ class UNL_DWT_Generator extends UNL_DWT
      */
     function _generateSetters($input)
     {
-
         $setters = '';
 
         // only generate if option is set to true
@@ -497,5 +497,4 @@ class UNL_DWT_Generator extends UNL_DWT
 
         return $setters;
     }
-
 }
