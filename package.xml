@@ -13,10 +13,10 @@ This package generates php class files (objects) from Dreamweaver template files
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2012-03-12</date>
- <time>15:51:05</time>
+ <date>2012-09-11</date>
+ <time>13:41:12</time>
  <version>
-  <release>0.7.2</release>
+  <release>0.8.0</release>
   <api>0.7.1</api>
  </version>
  <stability>
@@ -24,24 +24,33 @@ This package generates php class files (objects) from Dreamweaver template files
   <api>beta</api>
  </stability>
  <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
- <notes>Scanner fix - do not replace newlines with spaces in scanned content</notes>
+ <notes>Feature Release:
+
+* Dreamweaver templates using params are now properly supported
+* Minor API changes
+** Add UNL_DWT::getTemplateFile() which is used during the rendering process
+
+</notes>
  <contents>
   <dir name="/">
    <dir name="docs" baseinstalldir="/">
     <dir name="examples">
-     <file role="doc" name="example.ini"/>
-     <file role="doc" name="example.test.ini"/>
-     <file role="doc" name="example_style1.php"/>
+     <dir name="basic">
+      <file role="doc" name="example.ini"/>
+      <file role="doc" name="example.test.ini"/>
+      <file role="doc" name="example_style1.php"/>
+      <file role="doc" name="template_style1.dwt"/>
+      <file role="doc" name="Template_style1.php"/>
+      <file role="doc" name="Template_style1.tpl"/>
+     </dir>
      <file role="doc" name="scanner_example.php"/>
-     <file role="doc" name="template_style1.dwt"/>
-     <file role="doc" name="Template_style1.php"/>
-     <file role="doc" name="Template_style1.tpl"/>
     </dir>
    </dir>
    <dir name="src" baseinstalldir="/">
     <dir name="UNL">
      <dir name="DWT">
       <file role="php" name="createTemplates.php"/>
+      <file role="php" name="Exception.php"/>
       <file role="php" name="Generator.php"/>
       <file role="php" name="Region.php"/>
       <file role="php" name="Scanner.php"/>

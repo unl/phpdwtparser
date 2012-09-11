@@ -1,0 +1,6 @@
+Feature Release:
+
+* Dreamweaver templates using params are now properly supported
+* Minor API changes
+** Add UNL_DWT::getTemplateFile() which is used during the rendering process
+
