@@ -149,17 +149,23 @@ class UNL_DWT
 
         foreach ($regions as $region => $value) {
             /* Replace the region with the replacement text */
+            $startMarker = $this->getRegionBeginMarker(self::TEMPLATE_TOKEN, $region);
+            $endMarker = $this->getRegionEndMarker(self::TEMPLATE_TOKEN);
             $p = str_replace(
-                self::strBetween($this->getRegionBeginMarker(self::TEMPLATE_TOKEN, $region),
-                    $this->getRegionEndMarker(self::TEMPLATE_TOKEN), $p),
-                $value, $p, $count
+                self::strBetween($startMarker, $endMarker, $p, true),
+                $startMarker . $value . $endMarker,
+                $p,
+                $count
             );
 
             if (!$count) {
+                $startMarker = $this->getRegionBeginMarker(self::INSTANCE_TOKEN, $region);
+                $endMarker = $this->getRegionEndMarker(self::INSTANCE_TOKEN);
                 $p = str_replace(
-                    self::strBetween($this->getRegionBeginMarker(self::INSTANCE_TOKEN, $region),
-                        $this->getRegionEndMarker(self::INSTANCE_TOKEN), $p),
-                    $value, $p, $count
+                    self::strBetween($startMarker, $endMarker, $p, true),
+                    $startMarker . $value . $endMarker,
+                    $p,
+                    $count
                 );
             }
 
@@ -299,16 +305,16 @@ class UNL_DWT
      *
      * @return string
      */
-    static function strBetween($start, $end, $p)
+    static function strBetween($start, $end, $p, $inclusive = false)
     {
         if (!empty($start) && strpos($p, $start) !== false) {
-            $p = substr($p, strpos($p, $start)+strlen($start));
+            $p = substr($p, strpos($p, $start)+($inclusive ? 0 : strlen($start)));
         } else {
             return '';
         }
 
         if (strpos($p, $end) !==false) {
-            $p = substr($p, 0, strpos($p, $end));
+            $p = substr($p, 0, strpos($p, $end)+($inclusive ? strlen($end) : 0));
         } else {
             return '';
         }
