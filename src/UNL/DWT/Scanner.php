@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles scanning a dwt file for regions.
+ * Handles scanning a dwt file for regions and rendering.
  *
  * PHP version 5
  *
@@ -12,6 +12,7 @@
  * @license   http://www1.unl.edu/wdn/wiki/Software_License BSD License
  * @link      http://pear.unl.edu/package/UNL_DWT
  */
+require_once 'UNL/DWT.php';
 require_once 'UNL/DWT/Region.php';
 
 /**
@@ -23,7 +24,7 @@ require_once 'UNL/DWT/Region.php';
  * @license   http://www1.unl.edu/wdn/wiki/Software_License BSD License
  * @link      http://pear.unl.edu/package/UNL_DWT
  */
-class UNL_DWT_Scanner
+class UNL_DWT_Scanner extends UNL_DWT
 {
     protected $_regions;
 
@@ -34,7 +35,18 @@ class UNL_DWT_Scanner
      */
     function __construct($dwt)
     {
+        $this->__template = $dwt;
         $this->scanRegions($dwt);
+    }
+
+    /**
+     * Return the template markup
+     *
+     * @return string
+     */
+    function getTemplateFile()
+    {
+        return $this->__template;
     }
 
     function scanRegions($dwt)
@@ -131,6 +143,16 @@ class UNL_DWT_Scanner
             ' on line ' . $trace[0]['line'],
             E_USER_NOTICE);
         return null;
+    }
+
+    /**
+     * Allow directly rendering
+     *
+     * @return string
+     */
+    function __toString()
+    {
+        return $this->toHtml();
     }
 
 }
