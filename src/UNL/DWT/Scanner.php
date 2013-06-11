@@ -144,6 +144,19 @@ class UNL_DWT_Scanner extends UNL_DWT
             E_USER_NOTICE);
         return null;
     }
+    
+    public function __set($region, $value)
+    {
+        $dwtRegion = $this->getRegion($region);
+        
+        if (!$dwtRegion) {
+            $dwtRegion = new UNL_DWT_Region();
+            $dwtRegion->name = $region;
+            $this->_regions[$region] = $dwtRegion;
+        }
+        
+        $dwtRegion->value = $value;
+    }
 
     /**
      * Allow directly rendering
