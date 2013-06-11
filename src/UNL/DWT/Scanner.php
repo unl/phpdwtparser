@@ -118,7 +118,7 @@ class UNL_DWT_Scanner extends UNL_DWT
     /**
      * returns array of all the regions found
      *
-     * @return array(UNL_DWT_Region)
+     * @return UNL_DWT_Region[]
      */
     public function getRegions()
     {
