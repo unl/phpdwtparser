@@ -51,7 +51,7 @@ class UNL_DWT_Scanner extends UNL_DWT
 
     function scanRegions($dwt)
     {
-        $this->_regions[] = array();
+        $this->_regions = array();
 
         $dwt = str_replace("\r", "\n", $dwt);
         $dwt = preg_replace("/(\<\!-- InstanceBeginEditable name=\"([A-Za-z0-9]*)\" -->)/i", "\n\\0\n", $dwt);
