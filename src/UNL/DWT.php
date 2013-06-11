@@ -56,6 +56,7 @@ class UNL_DWT
     const PARAM_REPLACE_TOKEN_ALT = '@@(_document[\'%s\'])@@';
 
     public $__template;
+    public $__params = array();
 
     /**
      * Run-time configuration options
@@ -80,6 +81,23 @@ class UNL_DWT
 
         return file_get_contents(self::$options['tpl_location'].$this->__template);
     }
+    
+    public function getRegions()
+    {
+        $regions = get_object_vars($this);
+        foreach (array_keys($regions) as $key) {
+            if (strpos($key, '__') === 0) {
+                unset($regions[$key]);
+            }
+        }
+        
+        return $regions;
+    }
+    
+    public function getParams()
+    {
+        return $this->__params;
+    }
 
     /**
      * Returns the given DWT with all regions replaced with their assigned
@@ -90,15 +108,8 @@ class UNL_DWT
     public function toHtml()
     {
         $p = $this->getTemplateFile();
-        $regions = get_object_vars($this);
-
-        unset($regions['__template']);
-
-        $params = array();
-        if (isset($regions['__params'])) {
-            $params = $regions['__params'];
-            unset($regions['__params']);
-        }
+        $regions = $this->getRegions();
+        $params = $this->getParams();
 
         $p = $this->replaceRegions($p, $regions);
         $p = $this->replaceParams($p, $params);

@@ -51,7 +51,7 @@ class UNL_DWT_Scanner extends UNL_DWT
 
     function scanRegions($dwt)
     {
-        $this->_regions[] = array();
+        $this->_regions = array();
 
         $dwt = str_replace("\r", "\n", $dwt);
         $dwt = preg_replace("/(\<\!-- InstanceBeginEditable name=\"([A-Za-z0-9]*)\" -->)/i", "\n\\0\n", $dwt);
@@ -118,7 +118,7 @@ class UNL_DWT_Scanner extends UNL_DWT
     /**
      * returns array of all the regions found
      *
-     * @return array(UNL_DWT_Region)
+     * @return UNL_DWT_Region[]
      */
     public function getRegions()
     {
@@ -143,6 +143,19 @@ class UNL_DWT_Scanner extends UNL_DWT
             ' on line ' . $trace[0]['line'],
             E_USER_NOTICE);
         return null;
+    }
+    
+    public function __set($region, $value)
+    {
+        $dwtRegion = $this->getRegion($region);
+        
+        if (!$dwtRegion) {
+            $dwtRegion = new UNL_DWT_Region();
+            $dwtRegion->name = $region;
+            $this->_regions[$region] = $dwtRegion;
+        }
+        
+        $dwtRegion->value = $value;
     }
 
     /**
