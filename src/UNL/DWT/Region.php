@@ -18,4 +18,9 @@ class UNL_DWT_Region
     var $line;
     var $flags;
     var $value;
+    
+    function __toString()
+    {
+        return $this->value;
+    }
 }
