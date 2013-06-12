@@ -13,10 +13,10 @@ This package generates php class files (objects) from Dreamweaver template files
   <email>brett.bieber@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2012-09-11</date>
- <time>13:41:12</time>
+ <date>2013-06-12</date>
+ <time>08:45:12</time>
  <version>
-  <release>0.8.0</release>
+  <release>0.9.0</release>
   <api>0.7.1</api>
  </version>
  <stability>
@@ -24,12 +24,11 @@ This package generates php class files (objects) from Dreamweaver template files
   <api>beta</api>
  </stability>
  <license uri="http://www1.unl.edu/wdn/wiki/Software_License">BSD</license>
- <notes>Feature Release:
+ <notes>Feature Release
+* Add support for immedaitely rendering a scanned DWT [saltybeagle]
 
-* Dreamweaver templates using params are now properly supported
-* Minor API changes
-** Add UNL_DWT::getTemplateFile() which is used during the rendering process
-
+Bug Fixes
+ * Prevent greedy matching of template regions [spam38]
 </notes>
  <contents>
   <dir name="/">
