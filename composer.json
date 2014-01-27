@@ -1,0 +1,7 @@
+{
+    "name": "UNL/PHPDWTParser",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    }
+}
+
