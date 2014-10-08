@@ -1,5 +1,5 @@
 {
-    "name": "UNL/PHPDWTParser",
+    "name": "unl/php-dwt-parser",
     "autoload": {
         "psr-0": { "": "src/" }
     },
