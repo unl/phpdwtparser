@@ -1,12 +1,11 @@
 <?php
 
-set_include_path(dirname(__DIR__).'/../src');
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 
-require_once 'UNL/DWT/Scanner.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-$file = file_get_contents(dirname(__FILE__).'/basic/'.'template_style1.dwt');
+$file = file_get_contents(__DIR__ . '/basic/template_style1.dwt');
 
 $scanned = new UNL_DWT_Scanner($file);
 
