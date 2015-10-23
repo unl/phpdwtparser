@@ -1,5 +1,0 @@
-Feature Release
-* Add support for immedaitely rendering a scanned DWT [saltybeagle]
-
-Bug Fixes
- * Prevent greedy matching of template regions [spam38]

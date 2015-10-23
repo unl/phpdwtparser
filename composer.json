@@ -1,8 +1,21 @@
 {
     "name": "unl/php-dwt-parser",
+    "description": "A PHP library for parsing DWT files and turning them into PHP classes",
+    "homepage": "http://wdn.unl.edu/",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Kevin Abel (kabel)",
+            "email": "kabel2@unl.edu",
+            "role": "Developer"
+        },
+        {
+            "name": "Brett Bieber (saltybeagle)",
+            "email": "brett.bieber@gmail.com",
+            "role": "Retired Developer"
+        }
+    ],
     "autoload": {
-        "psr-0": { "": "src/" }
-    },
-    "include-path": ["src"]
+        "psr-0": { "UNL_DWT": "src/" }
+    }
 }
-
