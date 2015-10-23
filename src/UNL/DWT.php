@@ -1,48 +1,15 @@
 <?php
 /**
- * This package is intended to create PHP Class files (Objects) from
- * Dreamweaver template (.dwt) files. It allows designers to create a
- * standalone Dreamweaver template for the website design, and developers
- * to use that design in php pages without interference.
- *
- * Similar to the way DB_DataObject works, the DWT package uses a
- * Generator to scan a .dwt file for editable regions and creates an
- * appropriately named class for that .dwt file with member variables for
- * each region.
- *
- * Once the objects have been generated, you can render a html page from
- * the template.
- *
- * $page = new UNL_DWT::factory('Template_style1');
- * $page->pagetitle = "Contact Information";
- * $page->maincontent = "Contact us by telephone at 111-222-3333.";
- * echo $page->toHtml();
- *
- * Parts of this package are modeled on (borrowed from) the PEAR package
- * DB_DataObject.
- *
- * PHP version 5
- *
- * @category  Templates
- * @package   UNL_DWT
- * @author    Brett Bieber <brett.bieber@gmail.com>
- * @created   01/18/2006
- * @copyright 2008 Regents of the University of Nebraska
- * @license   http://www1.unl.edu/wdn/wiki/Software_License BSD License
- * @link      http://pear.unl.edu/package/UNL_DWT
- */
-
-/**
  * Base class which understands Dreamweaver Templates.
  *
  * @category  Templates
  * @package   UNL_DWT
  * @author    Brett Bieber <brett.bieber@gmail.com>
- * @created   01/18/2006
- * @copyright 2008 Regents of the University of Nebraska
- * @license   http://www1.unl.edu/wdn/wiki/Software_License BSD License
- * @link      http://pear.unl.edu/package/UNL_DWT
+ * @copyright 2015 Regents of the University of Nebraska
+ * @license   http://wdn.unl.edu/software-license BSD License
+ * @link      https://github.com/unl/phpdwtparser
  */
+
 class UNL_DWT
 {
     const TEMPLATE_TOKEN = 'Template';
@@ -64,7 +31,7 @@ class UNL_DWT
      * @var array
      * @see UNL_DWT::setOption()
      */
-    static public $options = array(
+    public static $options = array(
         'debug' => 0,
     );
 
@@ -81,7 +48,7 @@ class UNL_DWT
 
         return file_get_contents(self::$options['tpl_location'].$this->__template);
     }
-    
+
     public function getRegions()
     {
         $regions = get_object_vars($this);
@@ -90,10 +57,10 @@ class UNL_DWT
                 unset($regions[$key]);
             }
         }
-        
+
         return $regions;
     }
-    
+
     public function getParams()
     {
         return $this->__params;
@@ -117,6 +84,15 @@ class UNL_DWT
         return $p;
     }
 
+    /**
+     * @see $this->toHtml
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toHtml();
+    }
+
     public function getRegionBeginMarker($type, $region)
     {
         return sprintf(self::REGION_BEGIN_TOKEN, $type, $region);
@@ -134,8 +110,13 @@ class UNL_DWT
 
     public function getParamReplacePattern($name)
     {
-        return '/' . sprintf(self::PARAM_DEF_TOKEN, '(' . self::TEMPLATE_TOKEN . '|' . self::INSTANCE_TOKEN . ')',
-            $name, '([^"]*)', '[^"]*') . '/';
+        return '/' . sprintf(
+            self::PARAM_DEF_TOKEN,
+            '(' . self::TEMPLATE_TOKEN . '|' . self::INSTANCE_TOKEN . ')',
+            $name,
+            '([^"]*)',
+            '[^"]*'
+        ) . '/';
     }
 
     public function getParamNeedle($name)
@@ -154,7 +135,7 @@ class UNL_DWT
      *
      * @return string page with replaced regions
      */
-    function replaceRegions($p, $regions)
+    public function replaceRegions($p, $regions)
     {
         self::debug('Replacing regions.', 'replaceRegions', 5);
 
@@ -189,14 +170,19 @@ class UNL_DWT
         return $p;
     }
 
-    function replaceParams($p, $params)
+    public function replaceParams($p, $params)
     {
         self::debug('Replacing params.', 'replaceRegions', 5);
 
         foreach ($params as $name => $config) {
             $value = isset($config['value']) ? $config['value'] : '';
-            $p = preg_replace($this->getParamReplacePattern($name), $this->getParamDefMarker('$1', $name, '$2', $value),
-                $p, 1, $count);
+            $p = preg_replace(
+                $this->getParamReplacePattern($name),
+                $this->getParamDefMarker('$1', $name, '$2', $value),
+                $p,
+                1,
+                $count
+            );
 
             if ($count) {
                 $p = str_replace($this->getParamNeedle($name), $value, $p);
@@ -216,15 +202,12 @@ class UNL_DWT
      *
      * @see UNL_DWT::setOption()
      */
-    static function &factory($type)
+    public static function factory($type)
     {
-        include_once self::$options['class_location']."{$type}.php";
-
-        $classname = self::$options['class_prefix'].$type;
+        $classname = self::$options['class_prefix'] . $type;
 
         if (!class_exists($classname)) {
-            require_once 'UNL/DWT/Exception.php';
-            throw new UNL_DWT_Exception('Unable to include the ' . self::$options['class_location'] . $type . '.php file.');
+            throw new UNL_DWT_Exception("Unable to find the $classname class");
         }
 
         @$obj = new $classname;
@@ -240,7 +223,7 @@ class UNL_DWT
      *
      * @return void
      */
-    static function setOption($option, $value)
+    public static function setOption($option, $value)
     {
         self::$options[$option] = $value;
     }
@@ -259,7 +242,7 @@ class UNL_DWT
      *
      * @return   none
      */
-    static function debug($message, $logtype = 0, $level = 1)
+    public static function debug($message, $logtype = 0, $level = 1)
     {
         if (empty(self::$options['debug'])  ||
             (is_numeric(self::$options['debug']) &&  self::$options['debug'] < $level)) {
@@ -285,7 +268,9 @@ class UNL_DWT
             $message = print_r($message, true);
         }
         $colorize = ($logtype == 'ERROR') ? '<font color="red">' : '<font>';
-        echo "<code>{$colorize}<strong>$class: $logtype:</strong> ". nl2br(htmlspecialchars($message)) . "</font></code><br />\n";
+        echo "<code>{$colorize}<strong>$class: $logtype:</strong> " .
+            nl2br(htmlspecialchars($message)) .
+            "</font></code><br />\n";
         flush();
     }
 
@@ -297,7 +282,7 @@ class UNL_DWT
      *
      * @return void
      */
-    static function debugLevel($v = null)
+    public static function debugLevel($v = null)
     {
         if ($v !== null) {
             $r = isset(self::$options['debug']) ? self::$options['debug'] : 0;
@@ -316,7 +301,7 @@ class UNL_DWT
      *
      * @return string
      */
-    static function strBetween($start, $end, $p, $inclusive = false)
+    public static function strBetween($start, $end, $p, $inclusive = false)
     {
         if (!empty($start) && strpos($p, $start) !== false) {
             $p = substr($p, strpos($p, $start)+($inclusive ? 0 : strlen($start)));
