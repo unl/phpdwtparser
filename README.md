@@ -17,7 +17,7 @@ This package generates php class files (objects) from Dreamweaver template files
 
 ````bash
 cd docs/examples/basic/
-php ../../../src/UNL/DWT/createTemplates.php example.ini
+php ../../../bin/createTemplates.php example.ini
 ````
 
 This will write new versions of Template_style1.php and Template_style1.tpl to docs/examples/basic/
