@@ -18,6 +18,13 @@ class UNL_DWT_Region
     public $flags;
     public $value;
 
+    public function __construct($name = '', $value = '', $line = null)
+    {
+        $this->name = $name;
+        $this->value = $value;
+        $this->line = $line;
+    }
+
     public function __toString()
     {
         return $this->value;
