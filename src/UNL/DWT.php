@@ -12,16 +12,6 @@
 
 class UNL_DWT
 {
-    const TEMPLATE_TOKEN = 'Template';
-    const INSTANCE_TOKEN = 'Instance';
-
-    const REGION_BEGIN_TOKEN = '<!-- %sBeginEditable name="%s" -->';
-    const REGION_END_TOKEN   = '<!-- %sEndEditable -->';
-
-    const PARAM_DEF_TOKEN         = '<!-- %sParam name="%s" type="%s" value="%s" -->';
-    const PARAM_REPLACE_TOKEN     = '@@(%s)@@';
-    const PARAM_REPLACE_TOKEN_ALT = '@@(_document[\'%s\'])@@';
-
     public $__template;
     public $__params = array();
 
@@ -96,46 +86,24 @@ class UNL_DWT
     }
 
     /**
+     * DWT String Utilities lazy factory
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
+     * @return UNL_DWT_StringUtils
+     */
+    public function getStringUtils()
+    {
+        return UNL_DWT_StringUtils::getInstance();
+    }
+
+    /**
      * @see $this->toHtml
      * @return string
      */
     public function __toString()
     {
         return $this->toHtml();
-    }
-
-    public function getRegionBeginMarker($type, $region)
-    {
-        return sprintf(self::REGION_BEGIN_TOKEN, $type, $region);
-    }
-
-    public function getRegionEndMarker($type)
-    {
-        return sprintf(self::REGION_END_TOKEN, $type);
-    }
-
-    public function getParamDefMarker($type, $name, $paramType, $value)
-    {
-        return sprintf(self::PARAM_DEF_TOKEN, $type, $name, $paramType, $value);
-    }
-
-    public function getParamReplacePattern($name)
-    {
-        return '/' . sprintf(
-            self::PARAM_DEF_TOKEN,
-            '(' . self::TEMPLATE_TOKEN . '|' . self::INSTANCE_TOKEN . ')',
-            $name,
-            '([^"]*)',
-            '[^"]*'
-        ) . '/';
-    }
-
-    public function getParamNeedle($name)
-    {
-        return array(
-            sprintf(self::PARAM_REPLACE_TOKEN, $name),
-            sprintf(self::PARAM_REPLACE_TOKEN_ALT, $name)
-        );
     }
 
     /**
@@ -149,6 +117,8 @@ class UNL_DWT
     public function replaceRegions($html, $regions)
     {
         self::debug('Replacing regions.', 'replaceRegions', 5);
+        $stringUtils = $this->getStringUtils();
+        $count = 0;
 
         // Replace the region with the replacement text
         foreach ($regions as $region => $value) {
