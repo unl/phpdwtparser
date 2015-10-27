@@ -17,5 +17,9 @@
     ],
     "autoload": {
         "psr-0": { "UNL_DWT": "src/" }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "zaininnari/html-minifier": "*"
     }
 }
