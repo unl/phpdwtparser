@@ -85,14 +85,14 @@ class UNL_DWT
      */
     public function toHtml()
     {
-        $p = $this->getTemplateFile();
+        $html = $this->getTemplateFile();
         $regions = $this->getRegions();
         $params = $this->getParams();
 
-        $p = $this->replaceRegions($p, $regions);
-        $p = $this->replaceParams($p, $params);
+        $html = $this->replaceRegions($html, $regions);
+        $html = $this->replaceParams($html, $params);
 
-        return $p;
+        return $html;
     }
 
     /**
@@ -141,66 +141,69 @@ class UNL_DWT
     /**
      * Replaces region tags within a template file wth their contents.
      *
-     * @param string $p       Page with DW Region tags.
+     * @param string $html    Page with DW Region tags.
      * @param array  $regions Associative array with content to replace.
      *
      * @return string page with replaced regions
      */
-    public function replaceRegions($p, $regions)
+    public function replaceRegions($html, $regions)
     {
         self::debug('Replacing regions.', 'replaceRegions', 5);
 
+        // Replace the region with the replacement text
         foreach ($regions as $region => $value) {
-            /* Replace the region with the replacement text */
-            $startMarker = $this->getRegionBeginMarker(self::TEMPLATE_TOKEN, $region);
-            $endMarker = $this->getRegionEndMarker(self::TEMPLATE_TOKEN);
-            $p = str_replace(
-                self::strBetween($startMarker, $endMarker, $p, true),
-                $startMarker . $value . $endMarker,
-                $p,
-                $count
+            $html = $this->replaceRegionByType($html, $region, $value, $stringUtils::TEMPLATE_TOKEN, $count);
+
+            if (!$count) {
+                $html = $this->replaceRegionByType($html, $region, $value, $stringUtils::INSTANCE_TOKEN, $count);
+            }
+
+            self::debug(
+                $count ? "$region is replaced with $value." : "Counld not find region $region!",
+                $count ? 5 : 3
             );
-
-            if (!$count) {
-                $startMarker = $this->getRegionBeginMarker(self::INSTANCE_TOKEN, $region);
-                $endMarker = $this->getRegionEndMarker(self::INSTANCE_TOKEN);
-                $p = str_replace(
-                    self::strBetween($startMarker, $endMarker, $p, true),
-                    $startMarker . $value . $endMarker,
-                    $p,
-                    $count
-                );
-            }
-
-            if (!$count) {
-                self::debug("Counld not find region $region!", 'replaceRegions', 3);
-            } else {
-                self::debug("$region is replaced with $value.", 'replaceRegions', 5);
-            }
         }
-        return $p;
+
+        return $html;
     }
 
-    public function replaceParams($p, $params)
+    protected function replaceRegionByType($html, $region, $content, $type, &$count)
+    {
+        $stringUtils = $this->getStringUtils();
+        $startMarker = $stringUtils->getRegionBeginMarker($type, $region);
+        $endMarker = $stringUtils->getRegionEndMarker($type);
+
+        return $stringUtils->strReplaceBetween(
+            $startMarker,
+            $endMarker,
+            $startMarker . $content . $endMarker,
+            $html,
+            true,
+            $count
+        );
+    }
+
+    public function replaceParams($html, $params)
     {
         self::debug('Replacing params.', 'replaceRegions', 5);
+        $stringUtils = $this->getStringUtils();
 
         foreach ($params as $name => $config) {
             $value = isset($config['value']) ? $config['value'] : '';
-            $p = preg_replace(
-                $this->getParamReplacePattern($name),
-                $this->getParamDefMarker('$1', $name, '$2', $value),
-                $p,
+            $html = preg_replace(
+                $stringUtils->getParamReplacePattern($name),
+                $stringUtils->getParamDefMarker('$1', $name, '$2', $value),
+                $html,
                 1,
                 $count
             );
 
             if ($count) {
-                $p = str_replace($this->getParamNeedle($name), $value, $p);
+                $html = str_replace($stringUtils->getParamNeedle($name), $value, $html);
             }
         }
 
-        return $p;
+        return $html;
     }
 
     /**
@@ -215,22 +218,21 @@ class UNL_DWT
      */
     public static function factory($type)
     {
-        $classname = self::$options['class_prefix'] . $type;
+        $prefix = isset(self::$options['class_prefix']) ? self::$options['class_prefix'] : '';
+        $classname = $prefix . $type;
 
         if (!class_exists($classname)) {
             throw new UNL_DWT_Exception("Unable to find the $classname class");
         }
 
-        @$obj = new $classname;
-
-        return $obj;
+        return new $classname;
     }
 
     /**
      * Sets options.
      *
      * @param string $option Option to set
-     * @param mixed  $value  Value to set for this option
+     * @param mixed  $value
      *
      * @return void
      */
@@ -242,10 +244,11 @@ class UNL_DWT
     /* ----------------------- Debugger ------------------ */
 
     /**
-     * Debugger. - use this in your extended classes to output debugging
-     * information.
+     * Debugger. - output debugging information.
      *
      * Uses UNL_DWT::debugLevel(x) to turn it on
+     *
+     * @SuppressWarnings(PHPMD.DevelopmentCodeFragment)
      *
      * @param string $message message to output
      * @param string $logtype bold at start
@@ -255,29 +258,29 @@ class UNL_DWT
      */
     public static function debug($message, $logtype = 0, $level = 1)
     {
-        if (empty(self::$options['debug'])  ||
-            (is_numeric(self::$options['debug']) &&  self::$options['debug'] < $level)) {
+        $debugLevel = self::debugLevel();
+        $isDebugCallable = is_callable($debugLevel);
+
+        if (empty($debugLevel) || !$isDebugCallable && $debugLevel < $level) {
             return;
         }
-        // this is a bit flaky due to php's wonderfull class passing around crap..
-        // but it's about as good as it gets..
-        $class = (isset($this) && ($this instanceof UNL_DWT)) ? get_class($this) : 'UNL_DWT';
+
+        $class = get_called_class();
 
         if (!is_string($message)) {
             $message = print_r($message, true);
         }
-        if (!is_numeric(self::$options['debug']) && is_callable(self::$options['debug'])) {
-            return call_user_func(self::$options['debug'], $class, $message, $logtype, $level);
+
+        if ($isDebugCallable) {
+            return call_user_func($debugLevel, $class, $message, $logtype, $level);
         }
 
         if (!ini_get('html_errors')) {
-            echo "$class   : $logtype       : $message\n";
+            echo "$class : $logtype : $message\n";
             flush();
             return;
         }
-        if (!is_string($message)) {
-            $message = print_r($message, true);
-        }
+
         $colorize = ($logtype == 'ERROR') ? '<font color="red">' : '<font>';
         echo "<code>{$colorize}<strong>$class: $logtype:</strong> " .
             nl2br(htmlspecialchars($message)) .
@@ -289,42 +292,18 @@ class UNL_DWT
      * sets and returns debug level
      * eg. UNL_DWT::debugLevel(4);
      *
-     * @param int $v level
+     * @param int $level
      *
      * @return void
      */
-    public static function debugLevel($v = null)
+    public static function debugLevel($level = null)
     {
-        if ($v !== null) {
-            $r = isset(self::$options['debug']) ? self::$options['debug'] : 0;
-            self::$options['debug']  = $v;
-            return $r;
-        }
-        return isset(self::$options['debug']) ? self::$options['debug'] : 0;
-    }
+        $previosLevel = isset(self::$options['debug']) ? self::$options['debug'] : 0;
 
-    /**
-     * Returns content between two strings
-     *
-     * @param string $start String which bounds the start
-     * @param string $end   end collecting content when you see this
-     * @param string $p     larger body of content to search
-     *
-     * @return string
-     */
-    public static function strBetween($start, $end, $p, $inclusive = false)
-    {
-        if (!empty($start) && strpos($p, $start) !== false) {
-            $p = substr($p, strpos($p, $start)+($inclusive ? 0 : strlen($start)));
-        } else {
-            return '';
+        if (null !== $level) {
+            self::$options['debug'] = $level;
         }
 
-        if (strpos($p, $end) !==false) {
-            $p = substr($p, 0, strpos($p, $end)+($inclusive ? strlen($end) : 0));
-        } else {
-            return '';
-        }
-        return $p;
+        return $previosLevel;
     }
 }
