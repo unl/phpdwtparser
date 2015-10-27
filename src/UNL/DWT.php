@@ -66,6 +66,17 @@ class UNL_DWT
         return $this->__params;
     }
 
+    public function setParam($key, $value)
+    {
+        if (!isset($$this->__params[$key])) {
+            return $this;
+        }
+
+        $this->__params[$key]['value'] = $value;
+
+        return $this;
+    }
+
     /**
      * Returns the given DWT with all regions replaced with their assigned
      * content.
