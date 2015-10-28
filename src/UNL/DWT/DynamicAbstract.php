@@ -97,7 +97,7 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
     protected function handleRegionBegin($name)
     {
-        $stringUtils = $this->stringUtils;
+        $stringUtils = $this->getStringUtils();
         $region = $this->activeRegion;
         $this->canBeginInstance = false;
 
