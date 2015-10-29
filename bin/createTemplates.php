@@ -11,9 +11,6 @@
  * @license   http://wdn.unl.edu/software-license BSD License
   */
 
-// since this version doesnt use overload,
-// and I assume anyone using custom generators should add this..
-define('UNL_DWT_NO_OVERLOAD',1);
 ini_set('display_errors',true);
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -24,16 +21,16 @@ if (!@$_SERVER['argv'][1]) {
 
 $config = parse_ini_file($_SERVER['argv'][1], true);
 foreach($config as $class => $values) {
-    if ($class === 'UNL_DWT') {
-        UNL_DWT::$options = $values;
+    if ($class === 'UNL\DWT\AbstractDwt') {
+        UNL\DWT\AbstractDwt::$options = $values;
     }
 }
 
-if (empty(UNL_DWT::$options)) {
+if (empty(UNL\DWT\AbstractDwt::$options)) {
     throw new Exception("\nERROR: could not read ini file\n\n");
 }
 
 set_time_limit(0);
 
-$generator = new UNL_DWT_Generator;
+$generator = new UNL\DWT\Generator;
 $generator->start();
