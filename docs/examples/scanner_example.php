@@ -6,8 +6,7 @@ ini_set('display_errors', true);
 require __DIR__ . '/../../vendor/autoload.php';
 
 $file = file_get_contents(__DIR__ . '/basic/template_style1.dwt');
-
-$scanned = new UNL_DWT_Scanner($file);
+$scanned = new UNL\DWT\Scanner($file);
 
 // Modify the scanned content
 $scanned->content .= '<h3>Scanned content from the left nav:</h3>';
