@@ -16,7 +16,7 @@
         }
     ],
     "autoload": {
-        "psr-0": { "UNL_DWT": "src/" }
+        "psr-4": { "UNL\\DWT\\": "src/" }
     },
     "require": {
         "php": ">=5.5",
