@@ -1,5 +1,13 @@
 ## UNL PHP DWT Parser Changelog
 
+### 1.0.0
+
+* Complete API refactor (as much B/C kept as possible)
+  * Uses new composer dependencies to handle common library functions
+  * Requires PHP >= 5.5
+  * PSR-2 and PSR-4 compliant
+  * Reduced many issues identified by PHPMD
+
 ### 0.9.0
 
 * Add support for immedaitely rendering a scanned DWT [saltybeagle]
