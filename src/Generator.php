@@ -8,6 +8,8 @@
  * @link      https://github.com/unl/phpdwtparser
  */
 
+namespace UNL\DWT;
+
 use Zend\Code\Generator\FileGenerator;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlockGenerator;
@@ -22,7 +24,7 @@ use zz\Html\HTMLToken;
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
-class UNL_DWT_Generator extends UNL_DWT_Scanner
+class Generator extends Scanner
 {
     const DWT_FILE_SUFFIX = '.dwt';
     const PHP_FILE_SUFFIX = '.php';
@@ -35,14 +37,14 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
     protected $templates;
 
     /**
-     * class being extended (can be overridden by
-     * [UNL_DWT_Generator] extends=xxxx
-     *
+     * class being extended
      * @var string
      */
-    protected $extends = 'UNL_DWT';
+    protected $extends = '\UNL\DWT\AbstractDwt';
 
     protected $classPrefix = '';
+
+    protected $classNamespace = '';
 
     protected $classLocation;
 
@@ -61,6 +63,7 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
     protected $optionsMap = array(
         'extends' => 'extends',
         'classPrefix' => 'class_prefix',
+        'classNamespace' => 'class_namespace',
         'classLocation' => 'class_location',
         'dwtLocation' => 'dwt_location',
         'tplLocation' => 'tpl_location',
@@ -100,7 +103,7 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
     public function getTemplateFile()
     {
         $dwtLocation = rtrim($this->dwtLocation, DIRECTORY_SEPARATOR);
-        return file_get_contents($dwtLocation . DIRECTORY_SEPARATOR . $this->__template);
+        return file_get_contents($dwtLocation . DIRECTORY_SEPARATOR . $this->template);
     }
 
     /**
@@ -110,11 +113,11 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
      */
     public function start()
     {
-        if ($options = UNL_DWT::$options) {
+        if ($options = AbstractDwt::$options) {
             $this->setOptions($options);
         }
 
-        self::debugLevel(3);
+        static::debugLevel(3);
         $this->createTemplateList();
         $this->generateTemplates();
     }
@@ -138,13 +141,13 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
         }
 
         foreach ($this->templates as $template) {
-            $this->__template = $template;
+            $this->template = $template;
             $this->parse();
             $dwt = $this->toDwtInstance();
             $sanitizedName = $this->sanitizeTemplateName($template);
 
             $outfilename = $tplLocation . DIRECTORY_SEPARATOR . $sanitizedName . self::TPL_FILE_SUFFIX;
-            self::debug("Writing {$sanitizedName} to {$outfilename}", 'generateTemplates');
+            static::debug("Writing {$sanitizedName} to {$outfilename}", 'generateTemplates');
             file_put_contents($outfilename, $dwt);
 
             $this->generateClassTemplate();
@@ -162,7 +165,7 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
         $dwtLocation = rtrim($this->dwtLocation, DIRECTORY_SEPARATOR);
 
         if (!is_dir($dwtLocation)) {
-            throw new UNL_DWT_Exception("dwt_location is incorrect");
+            throw new Exception\InvalidArgumentException("dwt_location is incorrect");
         }
 
         $handle = opendir($dwtLocation);
@@ -174,8 +177,8 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
                 continue;
             }
 
-            if (substr($file, -4) === self::DWT_FILE_SUFFIX) {
-                self::debug("Adding {$file} to the list of templates.", 'createTemplateList');
+            if (substr($file, -4) === static::DWT_FILE_SUFFIX) {
+                static::debug("Adding {$file} to the list of templates.", 'createTemplateList');
                 $this->templates[] = $file;
             }
         }
@@ -199,7 +202,6 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
         $this->stateIgnoring = false;
 
         foreach ($this->tokens as $token) {
-            // todo: iterate over tokens again and dynamically create dwt content
             $type = $token->getType();
 
             if ($type !== HTMLToken::Comment) {
@@ -240,12 +242,12 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
 
         // check for content to add before an end tag
         if ($type === HTMLToken::EndTag && $tagName === HTMLNames::headTag) {
-            foreach ($this->getParams() as $paramSpec) {
+            foreach ($this->getParams() as $param) {
                 $content .= $stringUtils->getParamDefMarker(
                     $stringUtils::INSTANCE_TOKEN,
-                    $paramSpec['name'],
-                    $paramSpec['type'],
-                    $paramSpec['value']
+                    $param->getName(),
+                    $param->getType(),
+                    $param->getValue()
                 ) . "\n";
             }
         }
@@ -254,7 +256,7 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
 
         // check for content to add before a start tag
         if ($type === HTMLToken::StartTag && $tagName === HTMLNames::htmlTag) {
-            $content .= $stringUtils->getInstanceBeginMarker('/Templates/' . $this->__template);
+            $content .= $stringUtils->getInstanceBeginMarker('/Templates/' . $this->template);
         }
 
         return $content;
@@ -267,7 +269,7 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
 
         if ($region = $this->getRegion($name)) {
             $this->stateIgnoring = true;
-            $content .= $stringUtils->getRegionBeginMarker($stringUtils::INSTANCE_TOKEN, $region->name);
+            $content .= $stringUtils->getRegionBeginMarker($stringUtils::INSTANCE_TOKEN, $region->getName());
             $content .= str_replace($stringUtils->getNestedRegionLockExpression(), '', $region);
         }
 
@@ -294,13 +296,11 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
      */
     protected function generateClassTemplate()
     {
-        $sanitizedName = $this->sanitizeTemplateName($this->__template);
+        $sanitizedName = $this->sanitizeTemplateName($this->template);
         $className = $this->classPrefix . $sanitizedName;
         $classLocation = rtrim($this->classLocation, DIRECTORY_SEPARATOR);
         $inputFile = $classLocation . DIRECTORY_SEPARATOR . $sanitizedName . self::PHP_FILE_SUFFIX;
         $fileGenerator = new FileGenerator();
-
-        // todo: Add support for namespaces and uses
 
         if (file_exists($inputFile)) {
             $fileGenerator = FileGenerator::fromReflectedFileName($inputFile);
@@ -322,25 +322,27 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
             $fileGenerator->setClass($classGenerator);
         }
 
+        $classGenerator->setNamespaceName($this->classNamespace ? $this->classNamespace : null);
         $classGenerator->setExtendedClass($this->extends);
         $classGenerator->setDocBlock(DocBlockGenerator::fromArray([
-            'shortDescription' => 'Template Definition for ' . $this->__template,
+            'shortDescription' => 'Template Definition for ' . $this->template,
             'longDescription' => 'This class is an auto-generated class. Do not manually edit.',
         ]));
         $classGenerator->setSourceDirty();
 
         $this->generateClassTemplateMembers($classGenerator);
 
-        self::debug("Writing {$className} to {$inputFile}", 'generateClassTemplate');
+        static::debug("Writing {$className} to {$inputFile}", 'generateClassTemplate');
         $fileGenerator->write();
     }
 
     protected function generateClassTemplateMembers(ClassGenerator $classGenerator)
     {
-        $sanitizedName = $this->sanitizeTemplateName($this->__template);
+        $sanitizedName = $this->sanitizeTemplateName($this->template);
         $standardProperties = [
-            '__template' => $sanitizedName . self::TPL_FILE_SUFFIX,
-            '__params' => $this->getParams(),
+            'template' => $sanitizedName . self::TPL_FILE_SUFFIX,
+            'regions' => $this->getRegionsAsExportArray(),
+            'params' => $this->getParamsAsExportArray(),
         ];
 
         foreach ($standardProperties as $propertyName => $propertyValue) {
@@ -351,11 +353,35 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
                 $classGenerator->addPropertyFromGenerator($property);
             }
 
+            $property->setFlags($property::FLAG_PROTECTED);
             $property->setDefaultValue($propertyValue);
             $property->setSourceDirty();
         }
 
+        // todo: refactor this to go into the regions member
         $this->generateClassRegionMembers($classGenerator);
+    }
+
+    protected function getRegionsAsExportArray()
+    {
+        $regions = [];
+        foreach ($this->getRegions() as $region) {
+            $regions[$region->getName()] = $region->getValue();
+        }
+        return $regions;
+    }
+
+    protected function getParamsAsExportArray()
+    {
+        $params = [];
+        foreach ($this->getParams() as $param) {
+            $params[$param->getName()] = [
+                'name' => $param->getName(),
+                'value' => $param->getValue(),
+                'type' => $param->getType(),
+            ];
+        }
+        return $params;
     }
 
     /**
@@ -366,38 +392,28 @@ class UNL_DWT_Generator extends UNL_DWT_Scanner
     protected function generateClassRegionMembers(ClassGenerator $classGenerator)
     {
         foreach ($this->getRegions() as $region) {
-            $regionProperty = $classGenerator->getProperty($region->name);
-
-            if (!$regionProperty) {
-                $regionProperty = new PropertyGenerator($region->name);
-                $classGenerator->addPropertyFromGenerator($regionProperty);
-            }
-
-            $regionProperty->setDefaultValue($region->value);
-            $regionProperty->setSourceDirty();
-
             if ($this->generateGetters) {
-                $methodName = 'get' . ucfirst($region->name);
+                $methodName = 'get' . ucfirst($region->getName());
 
                 if (!$classGenerator->hasMethod($methodName)) {
                     $classGenerator->addMethod(
                         $methodName,
                         [],
                         MethodGenerator::FLAG_PUBLIC,
-                        'return $this->' . $region->name . ';'
+                        'return $this->' . $region->getName() . ';'
                     );
                 }
             }
 
             if ($this->generateSetters) {
-                $methodName = 'set' . ucfirst($region->name);
+                $methodName = 'set' . ucfirst($region->getName());
 
                 if (!$classGenerator->hasMethod($methodName)) {
                     $classGenerator->addMethod(
                         $methodName,
                         ['value'],
                         MethodGenerator::FLAG_PUBLIC,
-                        '$this->' . $region->name . ' = $value;' . "\n" . 'return $this;'
+                        '$this->' . $region->getName() . ' = $value;' . "\n" . 'return $this;'
                     );
                 }
             }

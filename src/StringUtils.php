@@ -1,7 +1,5 @@
 <?php
 /**
- * Base class which understands Dreamweaver Templates.
- *
  * @category  Templates
  * @package   UNL_DWT
  * @author    Kevin Abel <kabel2@unl.edu>
@@ -10,9 +8,11 @@
  * @link      https://github.com/unl/phpdwtparser
  */
 
+namespace UNL\DWT;
+
 use zz\Html\HTMLToken;
 
-class UNL_DWT_StringUtils
+class StringUtils
 {
     const TEMPLATE_TOKEN = 'Template';
     const INSTANCE_TOKEN = 'Instance';
@@ -65,10 +65,10 @@ class UNL_DWT_StringUtils
 
     public function getMarkerTypes()
     {
-        return array(
+        return [
             self::TEMPLATE_TOKEN,
             self::INSTANCE_TOKEN,
-        );
+        ];
     }
 
     protected function sanitizeMarkerType($type)
@@ -165,12 +165,16 @@ class UNL_DWT_StringUtils
 
     public function getParamNeedle($name)
     {
-        return array(
+        return [
             sprintf(self::PARAM_REPLACE_TOKEN, $name),
             sprintf(self::PARAM_REPLACE_TOKEN_ALT, $name)
-        );
+        ];
     }
 
+    /**
+     * @param HTMLToken $token
+     * @return string
+     */
     public function buildElement(HTMLToken $token)
     {
         switch ($token->getType()) {
@@ -202,7 +206,7 @@ class UNL_DWT_StringUtils
      */
     public function buildAttributes(HTMLToken $token)
     {
-        $attr = array();
+        $attr = [];
         $format = '%s=%s%s%s';
         foreach ($token->getAttributes() as $attribute) {
             $name = $attribute['name'];
@@ -291,7 +295,7 @@ class UNL_DWT_StringUtils
             return false;
         }
 
-        return array($posStart, $posEnd - $posStart);
+        return [$posStart, $posEnd - $posStart];
     }
 
     /**

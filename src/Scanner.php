@@ -1,7 +1,5 @@
 <?php
 /**
- * Will scan a dreamweaver templated file for regions and other relevant info.
- *
  * @category  Templates
  * @package   UNL_DWT
  * @author    Brett Bieber <brett.bieber@gmail.com>
@@ -9,7 +7,13 @@
  * @license   http://wdn.unl.edu/software-license BSD License
  * @link      https://github.com/unl/phpdwtparser
  */
-class UNL_DWT_Scanner extends UNL_DWT_DynamicAbstract
+
+namespace UNL\DWT;
+
+/**
+ * Will scan a dreamweaver templated file for regions and other relevant info.
+ */
+class Scanner extends AbstractDynamicDwt
 {
     /**
      * The contents of the .dwt file you wish to scan.
@@ -18,7 +22,7 @@ class UNL_DWT_Scanner extends UNL_DWT_DynamicAbstract
      */
     public function __construct($dwt)
     {
-        $this->__template = $dwt;
+        $this->template = $dwt;
         $this->parse();
     }
 
@@ -29,6 +33,6 @@ class UNL_DWT_Scanner extends UNL_DWT_DynamicAbstract
      */
     public function getTemplateFile()
     {
-        return $this->__template;
+        return $this->template;
     }
 }

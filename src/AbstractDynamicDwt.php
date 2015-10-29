@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * @category  Templates
  * @package   UNL_DWT
  * @author    Kevin Abel <kabel2@unl.edu>
@@ -9,17 +8,14 @@
  * @link      https://github.com/unl/phpdwtparser
  */
 
+namespace UNL\DWT;
+
 use zz\Html\HTMLMinify;
 use zz\Html\HTMLNames;
 use zz\Html\HTMLToken;
 
-abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
+abstract class AbstractDynamicDwt extends AbstractDwt
 {
-    /**
-     * @var UNL_DWT_Region[] Assoc array of template region names.
-     */
-    protected $regions = array();
-
     protected $canBeginInstance = false;
 
     protected $canLockRegion = false;
@@ -32,11 +28,13 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
     /**
      * Parse the DWT into regions
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function parse()
     {
-        $this->regions = array();
-        $this->__params = array();
+        $this->regions = [];
+        $this->params = [];
         $this->canBeginInstance = false;
         $this->regionNestLevel = 0;
         $this->activeRegion = null;
@@ -61,11 +59,11 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
                 $this->canLockRegion = true;
                 continue;
             } elseif ($paramMatch = $this->isParamDef($comment)) {
-                $this->addParam(array(
+                $this->addParam(Param::fromArray([
                     'name' => $paramMatch[2],
                     'type' => $paramMatch[3],
                     'value' => $paramMatch[4]
-                ));
+                ]));
                 continue;
             } elseif ($regionBegin = $this->isRegionBegin($comment)) {
                 $this->handleRegionBegin($regionBegin);
@@ -77,7 +75,7 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
             // it is a generic comment
             if ($region) {
-                $region->value .= $comment;
+                $region->setValue($region->getValue() . $comment);
             }
         }
     }
@@ -85,13 +83,14 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
     protected function handleTemplateContent(HTMLToken $token)
     {
         $this->canBeginInstance = false;
+        $region = $this->activeRegion;
 
         if ($token->getTagName() === HTMLNames::htmlTag) {
             $this->canBeginInstance = true;
         }
 
-        if ($this->activeRegion) {
-            $this->activeRegion->value .= $this->getStringUtils()->buildElement($token);
+        if ($region) {
+            $region->setValue($region->getValue() . $this->getStringUtils()->buildElement($token));
         }
     }
 
@@ -103,15 +102,15 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
         if ($region) {
             // Found a new nested region; remove the previous one
-            $region->value = str_replace(
-                $stringUtils->getRegionBeginMarker(UNL_DWT::INSTANCE_TOKEN, $region->name),
+            $region->setValue(str_replace(
+                $stringUtils->getRegionBeginMarker($stringUtils::INSTANCE_TOKEN, $region->getName()),
                 '',
-                $region->value
-            );
+                $region->getValue()
+            ));
             ++$this->regionNestLevel;
         }
 
-         $this->activeRegion = new UNL_DWT_Region($name);
+         $this->activeRegion = new Region($name);
     }
 
     protected function handleRegionEnd()
@@ -133,7 +132,7 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
         if ($region) {
             if (!$this->canLockRegion ||
-                strpos($region->value, $stringUtils->getNestedRegionLockExpression()) === false
+                strpos($region->getValue(), $stringUtils->getNestedRegionLockExpression()) === false
             ) {
                 $this->addRegion($region);
                 $this->activeRegion = null;
@@ -154,7 +153,7 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
     protected function isParamDef($comment)
     {
-        $matches = array();
+        $matches = [];
         $pattern = $this->getStringUtils()->getParamDefPattern();
         if (preg_match($pattern, $comment, $matches)) {
             return $matches;
@@ -164,7 +163,7 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
 
     protected function isRegionBegin($comment)
     {
-        $matches = array();
+        $matches = [];
         $pattern = $this->getStringUtils()->getRegionBeginPattern();
         if (preg_match($pattern, $comment, $matches)) {
             return $matches[2];
@@ -181,91 +180,15 @@ abstract class UNL_DWT_DynamicAbstract extends UNL_DWT
         return false;
     }
 
-    /**
-     * returns the region object
-     *
-     * @param string $region
-     * @return UNL_DWT_Region
-     */
-    public function getRegion($region)
+    public function addRegion(Region $region)
     {
-        if (isset($this->regions[$region])) {
-            return $this->regions[$region];
-        }
-        return null;
-    }
-
-    /**
-     * returns array of all the regions found
-     *
-     * @return UNL_DWT_Region[]
-     */
-    public function getRegions()
-    {
-        return $this->regions;
-    }
-
-    public function addRegion(UNL_DWT_Region $region)
-    {
-        $this->regions[$region->name] = $region;
+        $this->regions[$region->getName()] = $region;
         return $this;
     }
 
-    public function addParam($spec)
+    public function addParam(Param $param)
     {
-        $this->__params[$spec['name']] = $spec;
+        $this->params[$param->getName()] = $param;
         return $this;
-    }
-
-    /**
-     * returns if the named region exists in this DWT
-     *
-     * @param string $region Region name to look for
-     * @return bool
-     */
-    public function __isset($region)
-    {
-        return isset($this->regions[$region]);
-    }
-
-    /**
-     * returns the stored value of the named region
-     *
-     * @param  string $region Region name to return value of
-     * @return mixed
-     */
-    public function __get($region)
-    {
-        if (isset($this->regions[$region])) {
-            return $this->regions[$region]->value;
-        }
-
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property: ' . $region .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE
-        );
-
-        return null;
-    }
-
-    /**
-     * sets the value of the named region, creating a new one if it doesn't exist
-     *
-     * @param string $region Region name
-     * @param string $value  Region value
-     */
-    public function __set($region, $value)
-    {
-        $dwtRegion = $this->getRegion($region);
-
-        if (!$dwtRegion) {
-            $dwtRegion = new UNL_DWT_Region($region);
-            $this->addRegion($dwtRegion);
-        }
-
-        $dwtRegion->value = $value;
     }
 }
