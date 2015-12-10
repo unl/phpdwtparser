@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true"
+         bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="phpdwtparser test suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html" target="tests/build/coverage/html" title="Code coverage for phpdwtparser" charset="UTF-8" yui="true" highlight="true" />
+        <log type="coverage-clover" target="tests/build/coverage/clover.xml" />
+        <log type="coverage-text" target="tests/build/coverage/coverage.txt" showUncoveredFiles="true"/>
+    </logging>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
