@@ -74,8 +74,8 @@ abstract class AbstractDynamicDwt extends AbstractDwt
             }
 
             // it is a generic comment
-            if ($region) {
-                $region->setValue($region->getValue() . $comment);
+            if ($this->activeRegion) {
+                $this->activeRegion->setValue($this->activeRegion->getValue() . $comment);
             }
         }
     }

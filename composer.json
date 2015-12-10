@@ -18,6 +18,7 @@
     "autoload": {
         "psr-4": { "UNL\\DWT\\": "src/" }
     },
+    "bin": ["bin/createTemplates.php"],
     "require": {
         "php": ">=5.5",
         "zaininnari/html-minifier": "*",

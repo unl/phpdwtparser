@@ -196,6 +196,11 @@ class Generator extends Scanner
         return preg_replace('/[^A-Z0-9]/i', '_', ucfirst(str_replace(self::DWT_FILE_SUFFIX, '', $filename)));
     }
 
+    protected function sanitizeTemplateClassName($filename)
+    {
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $this->sanitizeTemplateName($filename))));
+    }
+
     protected function toDwtInstance()
     {
         $dwt = '';
@@ -296,7 +301,7 @@ class Generator extends Scanner
      */
     protected function generateClassTemplate()
     {
-        $sanitizedName = $this->sanitizeTemplateName($this->template);
+        $sanitizedName = $this->sanitizeTemplateClassName($this->template);
         $className = $this->classPrefix . $sanitizedName;
         $classLocation = rtrim($this->classLocation, DIRECTORY_SEPARATOR);
         $inputFile = $classLocation . DIRECTORY_SEPARATOR . $sanitizedName . self::PHP_FILE_SUFFIX;

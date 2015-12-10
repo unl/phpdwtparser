@@ -39,6 +39,11 @@ class Param extends AbstractNameValue
         $this->setType($type);
     }
 
+    public function getType()
+    {
+        return $this->type;
+    }
+
     public function setType($type)
     {
         $supportedTypes = [
