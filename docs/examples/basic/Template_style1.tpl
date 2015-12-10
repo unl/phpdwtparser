@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/template_style1.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<!-- This is a generic comment -->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>Sample Template Style 1</title>
 <!-- InstanceEndEditable -->
@@ -59,9 +60,11 @@ border-top: 1px solid gray;
 #content h2 { margin: 0 0 .5em 0; }
 </style>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+
+<!-- InstanceParam name="class" type="text" value="test" -->
 </head>
 
-<body>
+<body class="@@(_document['class'])@@">
 <div id="container">
 <div id="top">
 <h1><!-- InstanceBeginEditable name="header" -->Header<!-- InstanceEndEditable --></h1>
