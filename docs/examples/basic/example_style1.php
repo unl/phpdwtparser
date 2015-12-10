@@ -6,7 +6,7 @@ error_reporting(E_ALL|E_STRICT);
 require __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/Template_style1.php';
 
-$page = UNL\DWT\AbstractDwt::factory('Template_style1');
+$page = UNL\DWT\AbstractDwt::factory('TemplateStyle1');
 $page->header  = "Example Using Template Style 1";
 $page->leftnav = "<ul><li><a href='http://wdn.unl.edu/'>UNL WDN</a></li></ul>";
 $page->content = "<p>This example demonstrates the usefulness of the DWT object generator for Dreamweaver Templates.</p>";

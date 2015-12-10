@@ -9,7 +9,7 @@
  *
  * This class is an auto-generated class. Do not manually edit.
  */
-class Template_style1 extends \UNL\DWT\AbstractDwt
+class TemplateStyle1 extends \UNL\DWT\AbstractDwt
 {
 
     protected $template = 'Template_style1.tpl';
@@ -32,7 +32,11 @@ class Template_style1 extends \UNL\DWT\AbstractDwt
     );
 
     protected $params = array(
-        
+        'class' => array(
+            'name' => 'class',
+            'value' => 'test',
+            'type' => 'text',
+        ),
     );
 
 
