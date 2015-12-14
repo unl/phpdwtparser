@@ -23,5 +23,8 @@
         "php": ">=5.5",
         "zaininnari/html-minifier": "*",
         "zendframework/zend-code": "^2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.1.*"
     }
 }

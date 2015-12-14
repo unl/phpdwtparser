@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<!-- This is a generic comment -->
 <!-- TemplateBeginEditable name="doctitle" -->
 <title>Sample Template Style 1</title>
 <!-- TemplateEndEditable -->
@@ -59,9 +60,10 @@ border-top: 1px solid gray;
 #content h2 { margin: 0 0 .5em 0; }
 </style>
 <!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+<!-- TemplateParam name="class" type="text" value="test" -->
 </head>
 
-<body>
+<body class="@@(_document['class'])@@">
 <div id="container">
 <div id="top">
 <h1><!-- TemplateBeginEditable name="header" -->Header<!-- TemplateEndEditable --></h1>
