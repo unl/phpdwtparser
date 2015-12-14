@@ -3,5 +3,3 @@
 .project
 *.DS_Store
 /vendor
-/tests/build
-/tests/data/generator_test
