@@ -1,15 +1,17 @@
 <?php
 
-namespace UNL\DWT;
+namespace UNLTest\DWT;
+
+use UNL\DWT\Scanner;
 
 class ScannerTest extends \PHPUnit_Framework_TestCase
 {
     public function testRegions()
     {
         $scanner = $this->getExampleScanner();
-        
+
         $regions = $scanner->getRegions();
-        
+
         //Assert that all regions are present
         $this->assertArrayHasKey('doctitle', $regions);
         $this->assertArrayHasKey('head', $regions);
@@ -17,7 +19,9 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('leftnav', $regions);
         $this->assertArrayHasKey('content', $regions);
         $this->assertArrayHasKey('footer', $regions);
-        
+        $this->assertFalse(isset($scanner->foobar));
+        $this->assertNull($scanner->getRegion('foobar'));
+
         //Assert the content of regions
         $this->assertEquals("\n<title>Sample Template Style 1</title>\n", $regions['doctitle']->getValue());
     }
@@ -27,7 +31,7 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
         $scanner = $this->getExampleScanner();
 
         $params = $scanner->getParams();
-        
+
         //Assert that all regions are present
         $this->assertArrayHasKey('class', $params);
 
@@ -48,8 +52,8 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
 
         // Also, access the content that was scanned in
         $scanner->content .= '<pre>'.$scanner->leftnav.'</pre>';
-        
-        $this->assertEquals($expected, $scanner->toHtml());
+
+        $this->assertEquals($expected, (string) $scanner);
     }
 
     /**
@@ -58,7 +62,8 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
     protected function getExampleScanner()
     {
         $file = file_get_contents(__DIR__ . '/../docs/examples/basic/template_style1.dwt');
-        
+        Scanner::debugLevel(0);
+
         return new Scanner($file);
     }
 }
