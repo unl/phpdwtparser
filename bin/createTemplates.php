@@ -1,4 +1,4 @@
-#!/usr/bin/php -q
+#!/usr/bin/env php
 <?php
 /**
  * Tool to generate objects for dreamweaver template files.
@@ -11,9 +11,14 @@
  * @license   http://wdn.unl.edu/software-license BSD License
   */
 
-ini_set('display_errors',true);
+ini_set('display_errors', true);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+$vendorDir = __DIR__ . '/../vendor';
+if (!file_exists($vendorDir)) {
+	$vendorDir = __DIR__ . '/../../..';
+}
+
+require $vendorDir . '/autoload.php';
 
 if (!@$_SERVER['argv'][1]) {
     throw new Exception("\nERROR: createTemplates.php usage: 'php createTemplates.php example.ini'\n\n");
