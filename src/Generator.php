@@ -204,6 +204,7 @@ class Generator extends Scanner
     protected function toDwtInstance()
     {
         $dwt = '';
+        $paramsRendered = false;
         $this->stateIgnoring = false;
 
         foreach ($this->tokens as $token) {
@@ -218,8 +219,14 @@ class Generator extends Scanner
 
             $comment = $token->getData();
 
-            if ($this->isInstnaceBegin($comment) || $this->isParamDef($comment)) {
+            if ($this->isInstnaceBegin($comment)) {
                 // these markers will be automatically added at the proper tag location
+                continue;
+            } elseif ($this->isParamDef($comment)) {
+                if (!$paramsRendered) {
+                    $paramsRendered = true;
+                    $dwt .= $this->getDwtInstanceParams();
+                }
                 continue;
             } elseif ($regionBegin = $this->isRegionBegin($comment)) {
                 $dwt .= $this->getDwtRegionBeginContent($regionBegin);
@@ -238,6 +245,23 @@ class Generator extends Scanner
         return $dwt;
     }
 
+    protected function getDwtInstanceParams()
+    {
+        $stringUtils = $this->getStringUtils();
+        $renderedParams = [];
+
+        foreach ($this->getParams() as $param) {
+            $renderedParams[] = $stringUtils->getParamDefMarker(
+                $stringUtils::INSTANCE_TOKEN,
+                $param->getName(),
+                $param->getType(),
+                $param->getValue()
+            );
+        }
+
+        return implode("\n", $renderedParams);
+    }
+
     protected function getDwtInstanceContent(HTMLToken $token)
     {
         $stringUtils = $this->getStringUtils();
@@ -246,15 +270,8 @@ class Generator extends Scanner
         $content = '';
 
         // check for content to add before an end tag
-        if ($type === HTMLToken::EndTag && $tagName === HTMLNames::headTag) {
-            foreach ($this->getParams() as $param) {
-                $content .= $stringUtils->getParamDefMarker(
-                    $stringUtils::INSTANCE_TOKEN,
-                    $param->getName(),
-                    $param->getType(),
-                    $param->getValue()
-                ) . "\n";
-            }
+        if ($type === HTMLToken::EndTag && HTMLNames::htmlTag === $tagName) {
+            $content .= $stringUtils->getInstanceEndMarker();
         }
 
         $content .= $stringUtils->buildElement($token);

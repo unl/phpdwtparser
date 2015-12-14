@@ -60,7 +60,6 @@ border-top: 1px solid gray;
 #content h2 { margin: 0 0 .5em 0; }
 </style>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
-
 <!-- InstanceParam name="class" type="text" value="test" -->
 </head>
 
@@ -80,4 +79,4 @@ border-top: 1px solid gray;
 <div id="footer"><!-- InstanceBeginEditable name="footer" -->Footer<!-- InstanceEndEditable --></div>
 </div>
 </body>
-</html>
+<!-- InstanceEnd --></html>
