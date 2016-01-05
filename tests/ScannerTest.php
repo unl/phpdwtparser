@@ -39,6 +39,9 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("text", $params['class']->getType());
         $this->assertEquals("class", $params['class']->getName());
         $this->assertEquals("test", $params['class']->getValue());
+
+        $scanner->setParam('class', 'other-test');
+        $this->assertEquals('other-test', $params['class']->getValue());
     }
 
     public function testToHtml()

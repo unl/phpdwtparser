@@ -214,7 +214,7 @@ abstract class AbstractDwt
 
     public function setParam($key, $value)
     {
-        if (!isset($$this->params[$key])) {
+        if (!isset($this->params[$key])) {
             return $this;
         }
 
