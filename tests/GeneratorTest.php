@@ -5,7 +5,7 @@ namespace UNLTest\DWT;
 use UNL\DWT\AbstractDwt;
 use UNL\DWT\Generator;
 
-class GeneratorTest extends \PHPUnit_Framework_TestCase
+class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
     protected function getTestDir()
     {
