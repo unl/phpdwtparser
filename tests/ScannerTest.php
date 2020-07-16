@@ -4,7 +4,7 @@ namespace UNLTest\DWT;
 
 use UNL\DWT\Scanner;
 
-class ScannerTest extends \PHPUnit_Framework_TestCase
+class ScannerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRegions()
     {
