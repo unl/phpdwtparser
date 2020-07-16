@@ -21,7 +21,7 @@
     "bin": ["bin/createTemplates.php"],
     "require": {
         "php": ">=5.5",
-        "zaininnari/html-minifier": "*",
+        "unl/html-minifier": "*",
         "zendframework/zend-code": "^2.5"
     },
     "require-dev": {
