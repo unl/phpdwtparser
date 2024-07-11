@@ -12,7 +12,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         return __DIR__ . '/data/generator_test';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->deleteDirectory($this->getTestDir());
     }
